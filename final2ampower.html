@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CarbonCredits.com - User Profile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<style>
+body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f2f2f2; }
+header { background: #2c3e50; color: white; padding: 1rem; text-align: center; }
+.container { max-width: 800px; margin: 2rem auto; padding: 1rem; background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
+h2 { margin-top: 0; }
+.profile-info p { margin: 0.3rem 0; }
+.daily-credits { display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem; font-size: 1.5rem; }
+.coin { color: gold; font-size: 2rem; }
+.info-section { margin-top: 2rem; background: #ecf0f1; padding: 1rem; border-radius: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>CarbonCredits.com</h1>
+  <p>User Profile and Carbon Credits</p>
+</header>
+
+<div class="container" id="profile">
+  <h2>Profile</h2>
+  <div class="profile-info">
+    <p><strong>Username:</strong> John</p>
+    <p><strong>Role:</strong> Carbon Credit Seller</p>
+  </div>
+
+  <h3>Carbon Credits Generated Today</h3>
+  <div class="daily-credits" id="dailyCredits">
+    <span class="coin">💰</span> <span id="creditNumber">0</span>
+  </div>
+</div>
+
+<div class="container info-section">
+  <h2>Info</h2>
+  <ul>
+    <li>Generating one carbon credit — i.e., producing electricity using renewable sources — is essentially equivalent to removing carbon from the atmosphere. 🌱</li>
+    <li>Nowadays, one carbon credit has a very high value. 💰</li>
+    <li>Reduce carbon footprints and help clean the environment. 🌍</li>
+    <li>Our aim is net zero emissions. ✅</li>
+  </ul>
+</div>
+
+<script>
+// --- Firebase Config ---
+const firebaseConfig = {
+  apiKey: "AIzaSyCnd5ciVt-u_SQhjbBHzzym6BGEZbs_M1U",
+  authDomain: "carbon-credits-462b6.firebaseapp.com",
+  databaseURL: "https://carbon-credits-462b6-default-rtdb.firebaseio.com",
+  projectId: "carbon-credits-462b6",
+  storageBucket: "carbon-credits-462b6.firebasestorage.app",
+  messagingSenderId: "721551593669",
+  appId: "1:721551593669:web:474265f7b2080a66b020ac"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// --- Fetch total credits generated today ---
+function fetchCredits() {
+  db.ref('/amppower/credit_data').once('value').then(snapshot => {
+    let credits = snapshot.val() || 0;
+
+    // Handle object structure if needed
+    if(credits && typeof credits === 'object'){
+      if(credits.credit !== undefined) credits = credits.credit;
+      else credits = Object.values(credits)[0] || 0;
+    }
+    credits = Number(credits) || 0;
+
+    document.getElementById('creditNumber').textContent = credits;
+  });
+}
+
+// --- Initial load ---
+fetchCredits();
+</script>
+</body>
+</html>
+
